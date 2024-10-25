@@ -32,6 +32,7 @@ const renderer = new THREE.WebGLRenderer({
   canvas,
   antialias: true,
   alpha: true,
+  antialias: true,
 });
 renderer.shadowMap.enabled = true;
 
