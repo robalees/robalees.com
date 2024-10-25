@@ -4,8 +4,15 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Split Screen Homepage</title>
+	<title>robalees</title>
 	<link rel="stylesheet" href="style.css">
+	<style>
+		/* Add the immediate canvas hiding style to prevent FOUC */
+		#threeCanvas {
+			opacity: 0;
+			transition: opacity 0.3s ease-in;
+		}
+	</style>
 </head>
 
 <body>
@@ -15,8 +22,7 @@
 		</div>
 		<div class="right">
 			<h1>Welcome to My Homepage</h1>
-			<p>This is a Three.js example with a split layout. The left side features a spinning torus rendered using
-				Three.js, while the right side contains this text.</p>
+			<p>I am using this page to experiment with Three.js and eventually upload my portfolio.<br>Check back for more soon!</p>
 		</div>
 	</div>
 	<nav class="navbar">
@@ -32,7 +38,7 @@
 			<li class="nav-item"><a href="#" class="nav-link">Contact</a></li>
 		</ul>
 	</nav>
-	<script type="module" src="/main.js" defer></script>
+	<script type="module" src="/main.js"></script>
 </body>
 
 </html>

@@ -15,11 +15,19 @@ const canvas = document.getElementById("threeCanvas");
 const renderer = new THREE.WebGLRenderer({
   canvas,
   antialias: true,
+  powerPreference: "high-performance",
+  pixelRatio: window.devicePixelRatio,
 });
+
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 renderer.shadowMap.enabled = true;
 renderer.toneMapping = THREE.ACESFilmicToneMapping;
 renderer.toneMappingExposure = 1.0;
 renderer.outputEncoding = THREE.sRGBEncoding;
+
+renderer.onError = function (error) {
+  console.error("Renderer error:", error);
+};
 
 // Materials
 const robotMaterial = new THREE.MeshPhysicalMaterial({
@@ -63,7 +71,11 @@ function loadModel() {
         scene.add(model);
         resolve(model);
       },
-      undefined,
+      // Add loading progress callback
+      (xhr) => {
+        const percentComplete = (xhr.loaded / xhr.total) * 100;
+        updateLoadingProgress("model", percentComplete);
+      },
       (error) => {
         console.error("Error loading model:", error);
         reject(error);
@@ -90,9 +102,10 @@ plane.position.y = -2;
 plane.receiveShadow = true;
 scene.add(plane);
 
-// Simple animation
+// Animation
+let animationFrameId;
 function animate() {
-  requestAnimationFrame(animate);
+  animationFrameId = requestAnimationFrame(animate);
 
   if (model) {
     const time = Date.now() * 0.001;
@@ -102,7 +115,15 @@ function animate() {
   renderer.render(scene, camera);
 }
 
-// Simplified resize function
+// Resize handling
+const resizeObserver = new ResizeObserver((entries) => {
+  for (let entry of entries) {
+    if (entry.target === canvas.parentElement) {
+      resizeCanvas();
+    }
+  }
+});
+
 function resizeCanvas() {
   const container = canvas.parentElement;
   const width = container.clientWidth;
@@ -114,44 +135,114 @@ function resizeCanvas() {
   renderer.setSize(width, height);
 }
 
-// Environment Map Loading using HDR
+// Environment Map Loading
 function loadEnvironmentMap() {
   return new Promise((resolve, reject) => {
     const rgbeLoader = new RGBELoader();
+    rgbeLoader.setDataType(THREE.FloatType);
     rgbeLoader.load(
       "/symmetrical_garden_02_1k.hdr",
       function (texture) {
         texture.mapping = THREE.EquirectangularReflectionMapping;
+        texture.needsUpdate = true;
+        texture.flipY = false;
         scene.environment = texture;
         resolve();
       },
-      undefined,
+      // Add loading progress callback
+      (xhr) => {
+        const percentComplete = (xhr.loaded / xhr.total) * 100;
+        updateLoadingProgress("environment", percentComplete);
+      },
       reject
     );
   });
 }
 
+// Loading UI
+function showLoadingIndicator() {
+  const loadingElement = document.createElement("div");
+  loadingElement.id = "loading-indicator";
+  loadingElement.innerHTML = `
+    <div class="loading-spinner"></div>
+    <div class="loading-progress">Loading... 0%</div>
+  `;
+  document.body.appendChild(loadingElement);
+}
+
+function hideLoadingIndicator() {
+  const loadingElement = document.getElementById("loading-indicator");
+  if (loadingElement) {
+    loadingElement.remove();
+  }
+}
+
+function updateLoadingProgress(type, progress) {
+  const progressElement = document.querySelector(".loading-progress");
+  if (progressElement) {
+    progressElement.textContent = `Loading ${type}... ${Math.round(progress)}%`;
+  }
+}
+
+// Cleanup function
+function cleanup() {
+  if (animationFrameId) {
+    cancelAnimationFrame(animationFrameId);
+  }
+
+  if (model) {
+    scene.remove(model);
+    model.traverse((object) => {
+      if (object.geometry) object.geometry.dispose();
+      if (object.material) {
+        if (object.material.map) object.material.map.dispose();
+        object.material.dispose();
+      }
+    });
+  }
+
+  if (scene.environment) {
+    scene.environment.dispose();
+  }
+
+  renderer.dispose();
+  resizeObserver.disconnect();
+}
+
 // Initialize function
 async function init() {
+  showLoadingIndicator();
   try {
     await loadEnvironmentMap();
     await loadModel();
     resizeCanvas();
+
+    // Start observing resize
+    resizeObserver.observe(canvas.parentElement);
+
+    // Start animation
     animate();
+
+    // Show canvas
+    canvas.classList.add("loaded");
   } catch (error) {
     console.error("Failed to initialize scene:", error);
+    // Show error to user
+    const errorMessage = document.createElement("div");
+    errorMessage.className = "error-message";
+    errorMessage.textContent =
+      "Failed to load 3D scene. Please refresh the page.";
+    document.body.appendChild(errorMessage);
+  } finally {
+    hideLoadingIndicator();
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  // Wait for stylesheets to load
-  const styleSheets = document.styleSheets;
-  if (styleSheets.length === 0) {
-    // If no stylesheets are loaded yet, wait for load event
-    window.addEventListener("load", init);
-  } else {
-    init();
-  }
-});
+// Event listeners
+window.addEventListener("load", init);
+window.addEventListener("unload", cleanup);
 
-window.addEventListener("resize", resizeCanvas);
+// Error handling for texture loading failures
+THREE.DefaultLoadingManager.onError = function (url) {
+  console.error("Error loading texture:", url);
+};

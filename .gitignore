@@ -2,10 +2,10 @@
 node_modules/
 
 # Environment files
-.env
+# .env
 
 # IDE settings
-.vscode/
+# .vscode/
 
 # System files
 *.DS_Store

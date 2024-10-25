@@ -13,6 +13,69 @@ html {
     background-color: var(--background-color);
 }
 
+#threeCanvas {
+    opacity: 0;
+    transition: opacity 0.3s ease-in;
+}
+
+#threeCanvas.loaded {
+    opacity: 1;
+}
+
+#loading-indicator {
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 1000;
+    width: auto;
+    padding: 20px;
+    border-radius: 8px;
+}
+
+.loading-spinner {
+    border: 4px solid var(--background-color);
+    border-top: 4px solid var(--text-color);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 10px;
+}
+
+.loading-progress {
+    font-family: Arial, sans-serif;
+    color: var(--p-color);
+    font-size: 0.9rem;
+    margin-top: 10px;
+}
+
+.error-message {
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+    background-color: #ff5252;
+    color: white;
+    padding: 20px;
+    border-radius: 5px;
+    text-align: center;
+    z-index: 1000;
+    max-width: 80%;
+
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 .container {
     display: flex;
     height: 100%;
@@ -28,6 +91,7 @@ html {
     display: flex;
     justify-content: center;
     align-items: center;
+    position: relative;
 }
 
 #threeCanvas {
@@ -137,6 +201,14 @@ h1 {
 }
 
 @media (max-width: 768px) {
+    #loading-indicator,
+        .error-message {
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            max-width: 300px;
+        }
+
     .container {
         flex-direction: column;
     }
