@@ -310,7 +310,9 @@ async function init() {
 }
 
 // Start the application
-init();
+document.addEventListener("DOMContentLoaded", () => {
+  init();
+});
 
 // Cleanup on page unload
 window.addEventListener("unload", cleanupScene);
