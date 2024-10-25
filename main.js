@@ -80,7 +80,7 @@ let model;
 function loadModel() {
   return new Promise((resolve, reject) => {
     loader.load(
-      "/assets/robot01.glb", // Change path to your model file
+      "/robot01.glb", // Change path to your model file
       (gltf) => {
         model = gltf.scene;
         // Adjust initial position and scale of the model
