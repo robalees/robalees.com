@@ -52,22 +52,22 @@ composer.addPass(bloomPass);
 // Materials - Adjust colors and properties for different appearances
 const materials = {
   body: new THREE.MeshStandardMaterial({
-    color: 0xb1b6a6, // Change color (hex value)
+    color: 0xf9627d, // Change color (hex value)
     metalness: 0.7, // 0-1: higher = more metallic
     roughness: 0.3, // 0-1: lower = more shiny
   }),
   bottom: new THREE.MeshStandardMaterial({
-    color: 0x819595,
+    color: 0xf9627d,
     metalness: 0.7,
     roughness: 0.3,
   }),
   eye: new THREE.MeshStandardMaterial({
-    color: 0xff0000,
-    emissive: 0xff0000, // Self-illuminating color
-    emissiveIntensity: 0.5, // Brightness of self-illumination
+    color: 0x83b692,
+    emissive: 0xc5d86d, // Self-illuminating color
+    emissiveIntensity: 0.8, // Brightness of self-illumination
   }),
   antenna: new THREE.MeshStandardMaterial({
-    color: 0x819595,
+    color: 0xf9627d,
     metalness: 0.7,
     roughness: 0.3,
   }),
