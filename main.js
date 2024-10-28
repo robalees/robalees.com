@@ -29,21 +29,28 @@ renderer.onError = function (error) {
   console.error("Renderer error:", error);
 };
 
-// Materials
 const robotMaterial = new THREE.MeshPhysicalMaterial({
-  color: 0xf9627d,
-  metalness: 0.9,
-  roughness: 0.1,
-  clearcoat: 1.0,
-  clearcoatRoughness: 0.1,
+  color: 0xd64550,
+  roughness: 0.7,
+  transmission: 1,
+  thickness: 1,
+  // clearcoat: 1.0, // Strong clearcoat for that plastic shine
+  // clearcoatRoughness: 0.1,
+  // ior: 1.4, // Slightly lower for plastic
+  // sheen: 0.5, // Adds subtle plastic-like sheen
+  // sheenRoughness: 0.3,
+  // opacity: 0.9,
 });
 
 const eyeMaterial = new THREE.MeshPhysicalMaterial({
-  color: 0x83b692,
-  emissive: 0xc5d86d,
-  emissiveIntensity: 0.8,
-  metalness: 0.5,
+  color: 0xf4f1de,
+  metalness: 0.1,
   roughness: 0.2,
+  transmission: 0.8, // Add transparency
+  thickness: 0.5, // Add thickness for refraction
+  clearcoat: 1.0,
+  clearcoatRoughness: 0.1,
+  ior: 1.5, // Index of refraction for glass-like effect
 });
 
 // Model loading
@@ -84,14 +91,19 @@ function loadModel() {
   });
 }
 
-// Lighting
-const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 3);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
 directionalLight.position.set(6, 4, 2);
 directionalLight.castShadow = true;
+directionalLight.shadow.bias = -0.001; // Reduce shadow artifacts
 scene.add(directionalLight);
+
+// Add subtle fill light
+const fillLight = new THREE.DirectionalLight(0xffffff, 0.2);
+fillLight.position.set(-6, 2, -2);
+scene.add(fillLight);
 
 // Floor plane
 const planeGeometry = new THREE.PlaneGeometry(20, 20);
@@ -105,13 +117,15 @@ scene.add(plane);
 // Animation
 let animationFrameId;
 function animate() {
-  animationFrameId = requestAnimationFrame(animate);
-
+  requestAnimationFrame(animate);
   if (model) {
     const time = Date.now() * 0.001;
-    model.position.x = Math.sin(time * 0.5) * 0.2;
+    // Limit movement within canvas bounds
+    const maxOffset = 0.8;
+    model.position.x = Math.sin(time * 0.5) * maxOffset;
+    // Add subtle floating motion
+    model.position.y = Math.sin(time * 0.3) * 0.2;
   }
-
   renderer.render(scene, camera);
 }
 
@@ -139,9 +153,9 @@ function resizeCanvas() {
 function loadEnvironmentMap() {
   return new Promise((resolve, reject) => {
     const rgbeLoader = new RGBELoader();
-    rgbeLoader.setDataType(THREE.FloatType);
+    rgbeLoader.setDataType(THREE.HalfFloatType);
     rgbeLoader.load(
-      "/symmetrical_garden_02_1k.hdr",
+      "/studio.hdr",
       function (texture) {
         texture.mapping = THREE.EquirectangularReflectionMapping;
         texture.needsUpdate = true;
@@ -157,6 +171,17 @@ function loadEnvironmentMap() {
       reject
     );
   });
+}
+
+function updateCameraForScreenSize() {
+  const aspect = window.innerWidth / window.innerHeight;
+  if (window.innerWidth <= 768) {
+    camera.position.z = 4; // Further back for mobile
+  } else {
+    camera.position.z = 8; // Original position for desktop
+  }
+  camera.aspect = aspect;
+  camera.updateProjectionMatrix();
 }
 
 // Loading UI
@@ -216,6 +241,7 @@ async function init() {
     await loadEnvironmentMap();
     await loadModel();
     resizeCanvas();
+    updateCameraForScreenSize();
 
     // Start observing resize
     resizeObserver.observe(canvas.parentElement);
