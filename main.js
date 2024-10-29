@@ -15,6 +15,7 @@ const canvas = document.getElementById("threeCanvas");
 const renderer = new THREE.WebGLRenderer({
   canvas,
   antialias: true,
+  alpha: true,
   powerPreference: "high-performance",
   pixelRatio: window.devicePixelRatio,
 });
@@ -31,15 +32,19 @@ renderer.onError = function (error) {
 
 const robotMaterial = new THREE.MeshPhysicalMaterial({
   color: 0xd64550,
-  roughness: 0.7,
-  transmission: 1,
-  thickness: 1,
-  // clearcoat: 1.0, // Strong clearcoat for that plastic shine
-  // clearcoatRoughness: 0.1,
-  // ior: 1.4, // Slightly lower for plastic
-  // sheen: 0.5, // Adds subtle plastic-like sheen
-  // sheenRoughness: 0.3,
-  // opacity: 0.9,
+  transparent: true,
+  opacity: 1,
+  emissive: 0,
+  reflectivity: 0.19,
+  transmission: 1.0,
+  roughness: 0.28,
+  metalness: 0,
+  clearcoat: 0,
+  clearcoatRoughness: 0,
+  ior: 1.1,
+  thickness: 1.0,
+  side: THREE.DoubleSide,
+  depthWrite: false,
 });
 
 const eyeMaterial = new THREE.MeshPhysicalMaterial({
@@ -94,11 +99,14 @@ function loadModel() {
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.2);
 scene.add(ambientLight);
 
-const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
-directionalLight.position.set(6, 4, 2);
+const directionalLight = new THREE.DirectionalLight(0xffffff, 250);
+directionalLight.position.set(10, 10, 1);
 directionalLight.castShadow = true;
 directionalLight.shadow.bias = -0.001; // Reduce shadow artifacts
 scene.add(directionalLight);
+
+const helper = new THREE.DirectionalLightHelper(directionalLight, 5);
+scene.add(helper);
 
 // Add subtle fill light
 const fillLight = new THREE.DirectionalLight(0xffffff, 0.2);
@@ -178,7 +186,7 @@ function updateCameraForScreenSize() {
   if (window.innerWidth <= 768) {
     camera.position.z = 4; // Further back for mobile
   } else {
-    camera.position.z = 8; // Original position for desktop
+    camera.position.z = 4; // Original position for desktop
   }
   camera.aspect = aspect;
   camera.updateProjectionMatrix();
