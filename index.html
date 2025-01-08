@@ -7,21 +7,34 @@
 	<link rel="stylesheet" href="src/style.css">
 </head>
 <body>
-	<header></header>
-	<nav></nav>
+	<header>
+		<div id="logo"></div>
+	</header>
+	<nav>
+		<ul>
+			<li><a href="#">Home</a></li>
+		</ul>
+	</nav>
 	<article>
 		<form name="contact" netlify>
-		<p>
-			<label>Name <input type="text" name="name" /></label>
-		</p>
-		<p>
-			<label>Email <input type="email" name="email" /></label>
-		</p>
-		<p>
-			<button type="submit">Send</button>
-		</p>
-	</form></article>
-	<footer></footer>
+			<label for="name">Name:</label>
+			<input type="text" id="name" name="name" required>
+		
+			<label for="email">Email:</label>
+			<input type="email" id="email" name="email" required>
+		
+			<label for="phone">Phone Number:</label>
+			<input type="tel" id="phone" name="phone" required>
+		
+			<label for="comment">Comment:</label>
+			<textarea id="comment" name="comment" rows="4"></textarea>
+		
+			<button type="submit">Submit</button>
+		</form>
+	</article>
+	<footer>
+		<p>Footer content here</p>
+	</footer>
 	<script type="module" src="src/main.js"></script>
 </body>
 </html>

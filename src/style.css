@@ -1,6 +1,146 @@
 body,
 html {
+    font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
     background-color: rebeccapurple;
+    box-sizing: border-box;
+}
+
+/* Mobile-first CSS */
+header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f4f4f4;
+    padding: 1rem;
+}
+
+.logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    justify-content: center;
+    background-color: #333;
+}
+
+nav ul li {
+    margin: 0 1rem;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 1rem;
+}
+
+main {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+form label {
+    font-weight: bold;
+}
+
+form input,
+form textarea,
+form button {
+    padding: 0.5rem;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+form button {
+    background-color: #333;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #555;
+}
+
+footer {
+    text-align: center;
+    padding: 1rem;
+    background-color: #f4f4f4;
+    margin-top: 1rem;
+}
+
+/* Desktop styles (768px and above) */
+@media screen and (min-width: 768px) {
+    body {
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    header {
+        padding: 2rem;
+    }
+
+    .logo {
+        font-size: 2rem;
+    }
+
+    nav ul {
+        padding: 1rem 0;
+    }
+
+    nav ul li a {
+        font-size: 1.2rem;
+        padding: 0.5rem 1rem;
+        transition: color 0.3s ease;
+    }
+
+    nav ul li a:hover {
+        color: #ddd;
+    }
+
+    main {
+        grid-template-columns: repeat(12, 1fr);
+        padding: 2rem;
+    }
+
+    form {
+        grid-column: 4 / 10;
+        background-color: #f9f9f9;
+        padding: 2rem;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    form input,
+    form textarea {
+        padding: 0.75rem;
+        margin: 0.5rem 0 1rem 0;
+    }
+
+    form button {
+        width: 200px;
+        padding: 0.75rem;
+        margin: 1rem auto 0 auto;
+        transition: background-color 0.3s ease;
+    }
+
+    footer {
+        padding: 2rem;
+        margin-top: 2rem;
+    }
 }
