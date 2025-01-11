@@ -3,22 +3,36 @@ html {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #ffffff;
+    background-color: #d0f4de;
     box-sizing: border-box;
 }
 
 /* Mobile-first CSS */
 header {
     display: flex;
+    flex-direction: column;
+    /* Stack items vertically */
     justify-content: center;
     align-items: center;
     padding: 1rem;
+    gap: 10px;
+    /* Adjust space between canvas and text */
 }
 
 .logo {
     font-family: "brother-1816-printed", sans-serif;
-    font-weight: 700; 
+    font-weight: 700;
     font-style: normal;
+    margin: 0;
+    /* Remove default heading margin */
+}
+
+#three-canvas {
+    width: 150px;
+    /* Adjust size as needed */
+    height: 150px;
+    display: block;
+    /* Prevent any inline spacing issues */
 }
 
 nav ul {
@@ -27,7 +41,7 @@ nav ul {
     padding: 0;
     margin: 0;
     justify-content: center;
-    background-color: #333;
+    background-color: #A9DEF9;
 }
 
 nav ul li {
@@ -119,7 +133,7 @@ footer {
 
     form {
         grid-column: 4 / 10;
-        background-color: #f9f9f9;
+        background-color: #FCF6BD;
         padding: 2rem;
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
