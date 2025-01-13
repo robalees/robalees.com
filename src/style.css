@@ -1,7 +1,29 @@
 :root {
- --background-color: #F9F7F3;
- --forground-color: #D52941;
- --alt-color: #FCD581;
+ --background-color: #191308;
+ --forground-color: #efdd8d;
+ --alt-color: #ffffff;
+ --font-logo: 'Teko-Bold',sans-serif;
+ --font-body: 'RX100', sans-serif;
+}
+
+@font-face {
+    font-family: 'Teko-Bold';
+    src: url('/fonts/Teko-Bold.woff2') format('woff2'),
+        url('/fonts/Teko-Bold.woff') format('woff'),
+        url('/fonts/Teko-Bold.ttf') format('truetype');
+    font-weight: 700;
+    font-display: swap;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'RX100';
+    src: url('/fonts/RX100-Regular.woff2') format('woff2'),
+        url('/fonts/RX100-Regular.woff') format('woff'),
+        url('/fonts/RX100-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-display: swap;
+    font-style: normal;
 }
 
 body,
@@ -26,7 +48,7 @@ header {
 }
 
 .logo {
-    font-family: "brother-1816-printed", sans-serif;
+    font-family:var(--font-logo);
     font-weight: 700;
     font-style: normal;
     margin: 0;
@@ -58,6 +80,7 @@ nav ul li a {
     color: var(--forground-color);
     text-decoration: none;
     font-size: 1rem;
+    font-family: var(--font-body);
 }
 
 main {
@@ -72,6 +95,7 @@ form {
     flex-direction: column;
     gap: 0.5rem;
     padding: 2rem;
+    font-family: var(--font-body);
 }
 
 form label {
@@ -109,6 +133,70 @@ footer {
     padding: 1rem;
     margin-top: 1rem;
 }
+
+@keyframes flicker {
+  0%, 100% { 
+    opacity: 0.9;
+  }
+  50% { 
+    opacity: 0.8;
+  }
+}
+
+@keyframes textShadow {
+  0% {
+    text-shadow: 
+      0.5px 0 0.5px rgba(0,30,255,0.3),
+      -0.5px 0 0.5px rgba(255,0,80,0.3),
+      0 0 3px rgba(255,255,255,0.4);
+  }
+  100% {
+    text-shadow:
+      1px 0 0.5px rgba(0,30,255,0.3),
+      -1px 0 0.5px rgba(255,0,80,0.3),
+      0 0 4px rgba(255,255,255,0.4);
+  }
+}
+
+.crt {
+  /* position: relative; */
+  color: #fff;
+  text-shadow: 0 0 2px rgba(255,255,255,0.4);
+}
+
+.crt::before {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: linear-gradient(
+    rgba(18, 16, 16, 0) 50%,
+    rgba(0, 0, 0, 0.1) 50%
+  );
+  background-size: 100% 3px;
+  z-index: 2;
+  pointer-events: none;
+  opacity: 0.15;
+}
+
+.crt::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background: rgba(18, 16, 16, 0.05);
+  opacity: 0;
+  z-index: 2;
+  pointer-events: none;
+  animation: flicker 0.3s infinite;
+}
+
 
 /* Desktop styles (768px and above) */
 @media screen and (min-width: 768px) {
